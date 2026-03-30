@@ -2,7 +2,7 @@ import enum
 from datetime import datetime
 from typing import Any, Optional
 
-from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import BigInteger, DateTime, Float, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -20,7 +20,7 @@ class User(Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    telegram_user_id: Mapped[int] = mapped_column(Integer, unique=True, index=True)
+    telegram_user_id: Mapped[int] = mapped_column(BigInteger, unique=True, index=True)
     # Use Optional[...] instead of `T | None` for compatibility with SQLAlchemy
     # type introspection on Python versions where `X | None` can confuse parsing.
     telegram_username: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
@@ -91,7 +91,7 @@ class Game(Base):
 
     # Use string UUID from frontend/bot to keep it simple.
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
-    host_telegram_user_id: Mapped[int] = mapped_column(Integer, index=True)
+    host_telegram_user_id: Mapped[int] = mapped_column(BigInteger, index=True)
 
     board_min: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     board_max: Mapped[int] = mapped_column(Integer, default=75, nullable=False)
@@ -110,7 +110,7 @@ class Game(Base):
     current_call: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     next_index: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 
-    winner_telegram_user_id: Mapped[Optional[int]] = mapped_column(Integer, nullable=True, index=True)
+    winner_telegram_user_id: Mapped[Optional[int]] = mapped_column(BigInteger, nullable=True, index=True)
     winner_pattern_label: Mapped[Optional[str]] = mapped_column(String(128), nullable=True)
     winner_line_cells_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     winner_gross_pool_etb: Mapped[Optional[float]] = mapped_column(Float, nullable=True)

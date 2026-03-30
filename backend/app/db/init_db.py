@@ -62,9 +62,21 @@ def _sqlite_migrate() -> None:
             conn.execute(text("CREATE INDEX IF NOT EXISTS ix_users_telebirr_phone_key ON users(telebirr_phone_key)"))
 
 
+def _postgres_migrate() -> None:
+    """Adjust column types/compatibility for PostgreSQL deployments."""
+    if engine.dialect.name != "postgresql":
+        return
+    with engine.begin() as conn:
+        # Telegram IDs can exceed 32-bit range, so int4 columns overflow.
+        conn.execute(text("ALTER TABLE users ALTER COLUMN telegram_user_id TYPE BIGINT"))
+        conn.execute(text("ALTER TABLE games ALTER COLUMN host_telegram_user_id TYPE BIGINT"))
+        conn.execute(text("ALTER TABLE games ALTER COLUMN winner_telegram_user_id TYPE BIGINT"))
+
+
 def init_db() -> None:
     Base.metadata.create_all(bind=engine)
     _sqlite_migrate()
+    _postgres_migrate()
     db = SessionLocal()
     try:
         backfill_user_telebirr_phone_keys(db)
