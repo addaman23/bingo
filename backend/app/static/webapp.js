@@ -77,6 +77,8 @@ let lastBalanceEtb = 0;
 /** Last `/games/active` payload — drives lobby UI and balance banner. */
 let lastGameForUi = null;
 let securingPick = false;
+/** Prevent duplicate mark/unmark requests for the same card cell while one is in flight. */
+const pendingCellOps = new Set();
 /** Absolute deadline (ms) for lobby card pick — updated each `/games/active` response. */
 let anchoredLobbyDeadlineMs = NaN;
 let anchoredLobbyGameId = null;
@@ -860,6 +862,13 @@ function renderMyCard(game) {
       if (canTapMark) {
         cell.classList.add("canTap");
         cell.addEventListener("click", async () => {
+          const opKey = `${lastGameId}:${r}:${c}`;
+          if (pendingCellOps.has(opKey)) return;
+          pendingCellOps.add(opKey);
+          // Optimistic UI: show mark instantly, then confirm with backend.
+          cell.classList.add("marked");
+          cell.classList.remove("canTap");
+          cell.style.pointerEvents = "none";
           try {
             await apiFetch(`/games/${lastGameId}/mark`, {
               method: "POST",
@@ -867,12 +876,25 @@ function renderMyCard(game) {
             });
             await loadGameAndRender().catch(() => {});
           } catch (e) {
+            // Roll back optimistic mark if server rejects it.
+            cell.classList.remove("marked");
+            cell.classList.add("canTap");
+            cell.style.pointerEvents = "";
             setHint(e.message);
+          } finally {
+            pendingCellOps.delete(opKey);
           }
         });
       } else if (canTapUnmark) {
         cell.classList.add("canTap");
         cell.addEventListener("click", async () => {
+          const opKey = `${lastGameId}:${r}:${c}`;
+          if (pendingCellOps.has(opKey)) return;
+          pendingCellOps.add(opKey);
+          // Optimistic UI: remove mark instantly, then confirm with backend.
+          cell.classList.remove("marked");
+          cell.classList.remove("canTap");
+          cell.style.pointerEvents = "none";
           try {
             await apiFetch(`/games/${lastGameId}/unmark`, {
               method: "POST",
@@ -880,7 +902,13 @@ function renderMyCard(game) {
             });
             await loadGameAndRender().catch(() => {});
           } catch (e) {
+            // Roll back optimistic unmark if server rejects it.
+            cell.classList.add("marked");
+            cell.classList.add("canTap");
+            cell.style.pointerEvents = "";
             setHint(e.message);
+          } finally {
+            pendingCellOps.delete(opKey);
           }
         });
       }
