@@ -42,7 +42,7 @@ class Settings(BaseSettings):
 
     DATABASE_URL: str = "sqlite:///./habesha-bingo.db"
 
-    DEFAULT_CALL_INTERVAL_SEC: int = 5
+    DEFAULT_CALL_INTERVAL_SEC: int = 2
     # After the lobby pick countdown ends: seconds of pause before the first ball is drawn.
     POST_LOBBY_FIRST_CALL_DELAY_SEC: int = 3
     DEFAULT_WIN_MULTIPLIER: float = 2.0

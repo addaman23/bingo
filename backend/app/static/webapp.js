@@ -94,6 +94,8 @@ let lastSpokenCall = null;
 let voiceUnlocked = false;
 const WINNER_MODAL_AUTO_DISMISS_MS = 3000;
 let voiceToastShown = false;
+const ACTIVE_GAME_POLL_MS = 1000;
+const RUSH_LOBBY_POLL_MS = 220;
 
 function unlockVoiceOnce() {
   voiceUnlocked = true;
@@ -196,7 +198,7 @@ function scheduleRushLobbyPoll() {
           rushLobbyPollTimer = null;
           return;
         }
-        rushLobbyPollTimer = window.setTimeout(tick, 320);
+        rushLobbyPollTimer = window.setTimeout(tick, RUSH_LOBBY_POLL_MS);
       });
   };
   tick();
@@ -1448,7 +1450,7 @@ async function main() {
   setInterval(() => {
     if (!initData || !authOk) return;
     loadGameAndRender().catch(() => {});
-  }, 2000);
+  }, ACTIVE_GAME_POLL_MS);
 
   setInterval(() => {
     if (!initData || !authOk || !lastGameForUi) return;
