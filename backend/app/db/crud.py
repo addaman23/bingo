@@ -907,12 +907,12 @@ def advance_game_if_needed(db: Session, game: Game, now: datetime) -> Game:
         return game
 
     if not game.last_advance_at:
-        game.last_advance_at = now
+        game.last_advance_at = _naive_utc(now)
         db.flush()
         return game
 
     gap = running_next_call_interval_sec(game)
-    elapsed = (now - game.last_advance_at).total_seconds()
+    elapsed = (_naive_utc(now) - _naive_utc(game.last_advance_at)).total_seconds()
     if elapsed < gap:
         return game
 
@@ -933,7 +933,7 @@ def advance_game_if_needed(db: Session, game: Game, now: datetime) -> Game:
     called.append(next_call)
     game.called_numbers_json = json.dumps(called)
     game.next_index += 1
-    game.last_advance_at = now
+    game.last_advance_at = _naive_utc(now)
 
     # If we've used all numbers, end round — no automatic win; players must claim bingo before this.
     if game.next_index >= len(sequence):
