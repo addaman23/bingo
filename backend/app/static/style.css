@@ -1,0 +1,1863 @@
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: #070d18;
+  color: #f2f6ff;
+}
+
+.container {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.title .subtitle {
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.88;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.wallet {
+  text-align: right;
+}
+.wallet .label {
+  font-size: 12px;
+  opacity: 0.8;
+}
+.wallet .value {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.card {
+  background: #111b31;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.field {
+  min-width: 160px;
+}
+.label {
+  font-size: 13px;
+  opacity: 0.8;
+  margin-bottom: 6px;
+}
+
+input[type="number"] {
+  width: 160px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: #0b1220;
+  color: #e8eefc;
+}
+
+.pickBox {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px dashed rgba(255,255,255,0.25);
+  min-width: 160px;
+  text-align: center;
+  background: rgba(0,0,0,0.15);
+}
+
+.buttons {
+  margin-top: 12px;
+}
+
+.btn {
+  border-radius: 12px;
+  padding: 11px 16px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: #e8eefc;
+  cursor: pointer;
+  margin-right: 10px;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+}
+
+.btn.primary {
+  background: #ff7a00;
+  border-color: rgba(255,122,0,0.75);
+  color: #0b1220;
+}
+
+.btn.primary:hover {
+  filter: brightness(1.05);
+}
+
+.hint {
+  margin-top: 10px;
+  font-size: 12px;
+  opacity: 0.9;
+  white-space: pre-wrap;
+}
+
+.gameTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+
+.callBox {
+  background: rgba(47,125,255,0.15);
+  border: 1px solid rgba(47,125,255,0.35);
+  padding: 10px 14px;
+  border-radius: 12px;
+}
+.callNumber {
+  font-size: 24px;
+  font-weight: 800;
+}
+.value {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.board {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 6px;
+}
+
+.num {
+  padding: 10px 0;
+  border-radius: 10px;
+  text-align: center;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  cursor: pointer;
+  user-select: none;
+}
+
+.num.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.num.called {
+  background: rgba(46, 204, 113, 0.22);
+  border-color: rgba(46, 204, 113, 0.4);
+}
+
+.num.yourPick {
+  background: rgba(255, 215, 0, 0.22);
+  border-color: rgba(255, 215, 0, 0.55);
+}
+
+.result {
+  font-size: 14px;
+  font-weight: 700;
+  opacity: 0.95;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.bingoHead {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-bottom: 6px;
+  margin-top: 8px;
+  text-align: center;
+  font-weight: 800;
+  font-size: 13px;
+}
+.bingoHeadTile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 4px;
+  border-radius: 10px;
+  font-weight: 900;
+  font-size: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.bingoHeadTile.h0 { background: rgba(244, 208, 63, 0.22); color: #f4d03f; border-color: rgba(244, 208, 63, 0.4); }
+.bingoHeadTile.h1 { background: rgba(88, 214, 141, 0.2); color: #58d68d; border-color: rgba(88, 214, 141, 0.4); }
+.bingoHeadTile.h2 { background: rgba(93, 173, 226, 0.22); color: #5dade2; border-color: rgba(93, 173, 226, 0.4); }
+.bingoHeadTile.h3 { background: rgba(236, 112, 99, 0.22); color: #ff8a65; border-color: rgba(236, 112, 99, 0.45); }
+.bingoHeadTile.h4 { background: rgba(175, 122, 197, 0.22); color: #af7ac5; border-color: rgba(175, 122, 197, 0.4); }
+
+.bingoGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+.bingoGrid .cell {
+  padding: 10px 4px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  cursor: default;
+  user-select: none;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bingoGrid .cell.free {
+  font-size: 11px;
+  background: rgba(255,215,0,0.12);
+}
+.bingoGrid .cell.marked {
+  background: rgba(46, 204, 113, 0.35);
+  border-color: rgba(46, 204, 113, 0.55);
+}
+.bingoGrid .cell.canTap {
+  cursor: pointer;
+  border-color: rgba(47,125,255,0.45);
+}
+.bingoGrid .cell.canTap:active {
+  transform: scale(0.97);
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+.modal.hidden { display: none; }
+.modalInner {
+  background: #111b31;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 360px;
+  text-align: center;
+}
+.modalTitle {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  color: #58d68d;
+}
+.modalBody {
+  font-size: 14px;
+  line-height: 1.45;
+  margin-bottom: 16px;
+  opacity: 0.95;
+}
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+/* Play screen: keep Derash/Players/Bet/Call at the top like Habesha. */
+#viewPlay #statsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+#viewPlay #statsRow .statBox {
+  padding: 4px 3px 4px;
+  border-radius: 10px;
+}
+
+#viewPlay #statsRow .statLab {
+  font-size: 8px;
+  opacity: 0.78;
+  margin-bottom: 2px;
+  text-transform: none;
+}
+
+#viewPlay #statsRow .statVal {
+  font-size: 15px;
+}
+.statBox {
+  background: rgba(15, 23, 42, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 12px 8px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+.statLab {
+  display: block;
+  font-size: 11px;
+  opacity: 0.72;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+.statVal {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.habeshaLiveCall {
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 14px 14px 16px;
+}
+.habeshaCurrentCallPanel {
+  background: linear-gradient(180deg, rgba(30, 91, 184, 0.55) 0%, rgba(17, 50, 120, 0.65) 100%);
+  border: 1px solid rgba(93, 173, 226, 0.35);
+  border-radius: 14px;
+  padding: 14px 16px 16px;
+  text-align: center;
+}
+.habeshaCallLabel,
+.habeshaRecentLabel {
+  opacity: 0.92;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 11px;
+  font-weight: 700;
+}
+.habeshaCallPillRow {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+.currentCallBig {
+  display: inline-block;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  color: #0d1628;
+  background: linear-gradient(180deg, #ff9330 0%, #ff7a18 100%);
+  padding: 10px 28px;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(255, 132, 40, 0.35);
+  border: 1px solid rgba(255, 200, 120, 0.55);
+}
+
+.recentCalls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  justify-content: flex-start;
+}
+.recentChip {
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #0d1628;
+}
+.recentChip--c0 { background: rgba(244, 208, 63, 0.95); border-color: rgba(244, 208, 63, 0.55); }
+.recentChip--c1 { background: rgba(88, 214, 141, 0.95); border-color: rgba(88, 214, 141, 0.45); }
+.recentChip--c2 { background: rgba(93, 173, 226, 0.95); border-color: rgba(93, 173, 226, 0.45); }
+.recentChip--c3 { background: rgba(236, 112, 99, 0.95); border-color: rgba(236, 112, 99, 0.45); color: #fff; }
+.recentChip--c4 { background: rgba(175, 122, 197, 0.95); border-color: rgba(175, 122, 197, 0.45); color: #fff; }
+
+.masterBingo {
+  margin-top: 10px;
+}
+.bingoCols {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+.bingoCol {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.bingoColHead {
+  text-align: center;
+  font-weight: 900;
+  font-size: 13px;
+  padding: 6px 0;
+  border-radius: 8px;
+}
+.bingoColHead.h0 { background: rgba(244,208,63,0.2); color: #f4d03f; }
+.bingoColHead.h1 { background: rgba(88,214,141,0.2); color: #58d68d; }
+.bingoColHead.h2 { background: rgba(93,173,226,0.2); color: #5dade2; }
+.bingoColHead.h3 { background: rgba(236,112,99,0.2); color: #ec7063; }
+.bingoColHead.h4 { background: rgba(175,122,197,0.2); color: #af7ac5; }
+
+.mCell {
+  text-align: center;
+  padding: 6px 2px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 9px;
+  background: rgba(30, 41, 59, 0.65);
+  border: 1px solid rgba(71, 85, 105, 0.45);
+  color: rgba(148, 163, 184, 0.95);
+}
+.mCell.called {
+  background: rgba(34, 197, 94, 0.35);
+  border-color: rgba(52, 211, 153, 0.65);
+  color: #f8fffc;
+  font-weight: 800;
+}
+.mCell.currentCall {
+  background: rgba(250, 204, 21, 0.55) !important;
+  border-color: rgba(251, 191, 36, 0.95) !important;
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.45);
+  color: #1a1408 !important;
+  font-weight: 900;
+}
+
+/* Lobby picks on same BINGO board */
+.mCell.lobbyPickable {
+  cursor: pointer;
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.12);
+}
+.mCell.lobbyPickable:hover {
+  background: rgba(47,125,255,0.22);
+  border-color: rgba(47,125,255,0.45);
+}
+.mCell.lobbyYourPick {
+  background: rgba(46, 204, 113, 0.45) !important;
+  border-color: rgba(46, 204, 113, 0.85) !important;
+  color: #eafaf1 !important;
+  font-weight: 800;
+}
+.mCell.lobbyTaken {
+  background: rgba(110, 24, 28, 0.75) !important;
+  border-color: rgba(231, 76, 60, 0.75) !important;
+  color: #ff6b6b !important;
+  font-weight: 800;
+  cursor: not-allowed;
+}
+.mCell.lobbyDisabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.mCell.lobbyOutOfRange {
+  opacity: 0.22;
+  font-size: 11px;
+}
+
+/* Static 1–75 preview (loading / auth error) */
+.mCell.mCellStatic {
+  opacity: 1;
+  cursor: default;
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.1);
+  color: rgba(232, 238, 252, 0.88);
+  font-weight: 700;
+}
+
+.spectator {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(93,173,226,0.12);
+  border: 1px solid rgba(93,173,226,0.35);
+}
+.spectatorIcon {
+  font-size: 28px;
+  line-height: 1;
+}
+.spectatorTitle {
+  font-weight: 800;
+  font-size: 16px;
+  margin-bottom: 4px;
+  color: #5dade2;
+}
+.spectatorText {
+  font-size: 13px;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+/* —— Reference-style lobby strip & ticket grid —— */
+.lobbyStrip {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 8px;
+  padding: 6px 8px;
+  background: linear-gradient(180deg, #0f172a 0%, #0a0f1a 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.lobbyStrip::-webkit-scrollbar {
+  display: none;
+}
+.lobbyAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e67e22, #ca6f1e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 11px;
+  color: #fff;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+}
+/* STAKE + START timer stay together; theme first so row is not clipped on narrow screens */
+.lobbyPillPair {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 4px;
+  flex: 0 0 auto;
+  flex-shrink: 0;
+}
+.lobbyPill {
+  flex: 0 1 auto;
+  text-align: center;
+  padding: 5px 6px;
+  border-radius: 9px;
+  border: 1px solid rgba(255,255,255,0.12);
+  min-width: 0;
+  max-width: 78px;
+}
+.lobbyPillPair .lobbyPill.lpStake {
+  min-width: 50px;
+  max-width: 62px;
+  padding: 5px 5px;
+}
+.lobbyPillPair .lobbyPill.lpStart {
+  min-width: 52px;
+  max-width: 64px;
+  padding: 5px 6px;
+  flex-shrink: 0;
+}
+.lobbyPill .lpLab {
+  display: block;
+  font-size: 7px;
+  opacity: 0.88;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 800;
+  line-height: 1.15;
+}
+.lpStart .lpLab {
+  font-size: 7px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.lobbyPill .lpVal {
+  font-size: 12px;
+  font-weight: 900;
+  margin-top: 1px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+}
+.lpCard {
+  background: rgba(93, 64, 55, 0.4) !important;
+  border: 1px solid rgba(188, 170, 164, 0.5) !important;
+  color: #ffccbc;
+  max-width: 72px;
+}
+.lpCard .lpVal { color: #ffebe5; }
+.lpWallet {
+  background: rgba(27, 94, 32, 0.35);
+  border: 1px solid rgba(129, 199, 132, 0.5);
+  color: #c8e6c9;
+  max-width: 76px;
+}
+.lpWallet .lpVal { color: #4ade80; }
+.lpStake {
+  background: rgba(13, 71, 161, 0.35);
+  border: 1px solid rgba(100, 181, 246, 0.5);
+  color: #bbdefb;
+}
+.lpStake .lpVal { color: #60a5fa; }
+.lpStart {
+  background: rgba(20, 20, 28, 0.55);
+  border: 2px solid rgba(239, 68, 68, 0.75);
+  color: #fecaca;
+}
+.lpStart .lpVal { color: #f87171; font-size: 13px; font-weight: 900; }
+
+.themeToggle {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(30, 41, 59, 0.9);
+  color: #f4d03f;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.themeToggleStrip {
+  flex-shrink: 0;
+}
+.themeToggle:active { transform: scale(0.96); }
+
+.balanceBanner {
+  background: rgba(60, 12, 18, 0.75);
+  border: 1px solid rgba(231, 76, 60, 0.5);
+  border-left: 4px solid #e74c3c;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.balanceBannerTitle {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff5f0;
+  letter-spacing: 0.02em;
+}
+.balanceBannerBody {
+  font-size: 14px;
+  line-height: 1.45;
+  color: #f5b7b1;
+}
+
+/* Habesha-style: compact dark bar, gold text (waiting for players) */
+.lobbyPlayersBanner {
+  margin: 0 0 6px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.92);
+  color: #f4d03f;
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 1.35;
+  text-align: center;
+  border: 1px solid rgba(244, 208, 63, 0.28);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+body.theme-light .lobbyPlayersBanner {
+  background: rgba(30, 41, 59, 0.95);
+  color: #fde047;
+  border-color: rgba(250, 204, 21, 0.35);
+  font-weight: 500;
+}
+
+/* Shown when the Mini App never loaded /games/active (e.g. BOT_TOKEN mismatch). */
+.lobbyConnectHint {
+  margin: 0 0 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(231, 76, 60, 0.5);
+  background: rgba(45, 22, 18, 0.92);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+.lobbyConnectHintTitle {
+  display: block;
+  font-size: 14px;
+  font-weight: 800;
+  color: #ffb347;
+  margin-bottom: 6px;
+}
+.lobbyConnectHintText {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(255, 220, 200, 0.88);
+}
+body.theme-light .lobbyConnectHint {
+  border-color: rgba(192, 57, 43, 0.4);
+  background: #fff5f0;
+}
+body.theme-light .lobbyConnectHintTitle {
+  color: #c0392b;
+}
+body.theme-light .lobbyConnectHintText {
+  color: rgba(60, 35, 28, 0.9);
+}
+
+/* Lobby: visible countdown until card pick window closes → play board */
+.lobbyCountdownBanner {
+  margin-bottom: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(183, 124, 62, 0.45);
+  background: linear-gradient(135deg, rgba(45, 28, 12, 0.92) 0%, rgba(28, 18, 10, 0.96) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 8px 24px rgba(0, 0, 0, 0.35);
+  padding: 12px 14px;
+}
+.lobbyCountdownBannerInner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.lobbyCountdownIcon {
+  font-size: 22px;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+.lobbyCountdownMain {
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffe8d4;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+}
+.lobbyCountdownSub {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 220, 190, 0.82);
+  line-height: 1.4;
+}
+body.theme-light .lobbyCountdownBanner {
+  border-color: rgba(183, 124, 62, 0.35);
+  background: linear-gradient(135deg, #fff5eb 0%, #fdebd5 100%);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+body.theme-light .lobbyCountdownMain {
+  color: #3d2914;
+}
+body.theme-light .lobbyCountdownSub {
+  color: rgba(61, 41, 20, 0.75);
+}
+
+/* Card selection: big countdown under the title */
+.lobbyPickTimerRow {
+  margin: 12px 0 14px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(231, 76, 60, 0.45);
+  background: linear-gradient(145deg, rgba(55, 22, 18, 0.9) 0%, rgba(28, 14, 12, 0.95) 100%);
+  text-align: center;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.lobbyPickTimerInner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px 10px;
+}
+.lobbyPickTimerPre {
+  font-size: 15px;
+  font-weight: 800;
+  color: rgba(255, 200, 180, 0.95);
+  letter-spacing: 0.03em;
+}
+.lobbyPickTimerBig {
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1;
+  color: #ffb347;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+  font-variant-numeric: tabular-nums;
+}
+.lobbyPickTimerSuf {
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255, 210, 190, 0.88);
+}
+.lobbyPickTimerHint {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(255, 220, 200, 0.72);
+}
+body.theme-light .lobbyPickTimerRow {
+  border-color: rgba(231, 76, 60, 0.35);
+  background: linear-gradient(145deg, #fff5f0 0%, #fde8e0 100%);
+}
+body.theme-light .lobbyPickTimerPre {
+  color: #6b2d20;
+}
+body.theme-light .lobbyPickTimerBig {
+  color: #c0392b;
+  text-shadow: none;
+}
+body.theme-light .lobbyPickTimerSuf,
+body.theme-light .lobbyPickTimerHint {
+  color: rgba(90, 40, 30, 0.75);
+}
+
+/* Secured card preview under ticket grid (lobby) */
+.lobbyCardPreview {
+  margin-top: 16px;
+  padding: 14px 14px 12px;
+  border-radius: 16px;
+  background: rgba(26, 31, 43, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+.lobbyCardPreviewLabel {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.88);
+  margin-bottom: 10px;
+  text-align: center;
+}
+.lobbyPreviewLetters {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.lobbyPreviewLetterTile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 4px;
+  border-radius: 8px;
+  font-weight: 900;
+  font-size: 14px;
+  color: #fff;
+  background: #3b82f6;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.lobbyPreviewGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+.lobbyPreviewCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 6px 2px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  user-select: none;
+}
+.lobbyPreviewCell.lobbyPreviewFree {
+  font-size: 18px;
+  color: #111;
+  background: #f59e0b;
+  border-color: rgba(0, 0, 0, 0.12);
+}
+.lobbyPreviewFoot {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(16, 185, 129, 0.55);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.45;
+  text-align: center;
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.08);
+}
+body.theme-light .lobbyCardPreview {
+  background: #f8fafc;
+  border-color: rgba(15, 23, 42, 0.12);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+body.theme-light .lobbyCardPreviewLabel {
+  color: #0f172a;
+}
+body.theme-light .lobbyPreviewCell {
+  background: #e2e8f0;
+  color: #0f172a;
+  border-color: rgba(15, 23, 42, 0.1);
+}
+body.theme-light .lobbyPreviewCell.lobbyPreviewFree {
+  background: #f59e0b;
+  color: #111;
+}
+body.theme-light .lobbyPreviewFoot {
+  border-color: rgba(16, 185, 129, 0.45);
+  color: #059669;
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.ticketLegend {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  margin-top: 10px;
+  opacity: 0.9;
+}
+.ticketLegend .lg {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  margin-right: 6px;
+  vertical-align: -2px;
+}
+.ticketLegend .yourpick { background: rgba(46,204,113,0.55); border: 1px solid rgba(46,204,113,0.8); }
+.ticketLegend .taken { background: rgba(192,57,43,0.55); border: 1px solid rgba(192,57,43,0.9); }
+
+.boardCols10 {
+  grid-template-columns: repeat(10, 1fr) !important;
+}
+
+.boardCols10.boardDense .num {
+  padding: 7px 0;
+  font-size: 11px;
+  border-radius: 8px;
+}
+
+/* Lobby ticket board panel + scroll (reference bingo) */
+.lobbyBoardPanel {
+  padding: 14px 12px 16px;
+  background: #2a3344;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+.lobbyBoardPanel .ticketLegend {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+.pickBoardLabel {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-weight: 800;
+  opacity: 0.92;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.lobbyBoardPanel .pickBoardLabel {
+  display: none;
+}
+.boardScroll {
+  max-height: min(52vh, 440px);
+  overflow-y: auto;
+  margin-top: 0;
+  padding: 4px 6px 8px 2px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.28) rgba(0,0,0,0.2);
+}
+.boardScroll::-webkit-scrollbar {
+  width: 8px;
+}
+.boardScroll::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.25);
+  border-radius: 8px;
+}
+.boardScroll::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.22);
+  border-radius: 8px;
+}
+.boardScroll .board {
+  margin-top: 0;
+  gap: 3px;
+}
+/* Habesha ticket grid: uniform dark grey squares, white numbers (no column rainbow) */
+.boardLobbySquircle.boardCols10 {
+  grid-template-columns: repeat(10, 1fr) !important;
+}
+.boardScroll .boardLobbySquircle .num,
+.boardScroll .boardLobbySquircle.boardDense .num,
+.boardScroll .num {
+  aspect-ratio: 1 / 1;
+  min-height: 0;
+  width: 100%;
+  max-width: 100%;
+  padding: 1px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: clamp(11px, 3vw, 14px);
+  line-height: 1;
+  background: #3a4152;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  box-shadow: none;
+  text-align: center;
+}
+.boardScroll .boardLobbySquircle.boardDense .num {
+  font-size: clamp(10px, 2.85vw, 13px);
+  border-radius: 5px;
+}
+.boardScroll .boardLobbySquircle .num:not(.disabled):not(.taken):hover {
+  background: #454d60;
+  border-color: rgba(255, 255, 255, 0.16);
+}
+.boardScroll .num.numStaticPreview {
+  opacity: 0.55;
+  cursor: default;
+}
+.boardScroll .num.numStaticPreview:hover {
+  opacity: 0.55;
+}
+
+.num.taken {
+  background: rgba(110, 24, 28, 0.9) !important;
+  border-color: rgba(231, 76, 60, 0.85) !important;
+  color: #ff6b6b !important;
+  font-weight: 800;
+  cursor: not-allowed;
+}
+.num.yourPick {
+  background: rgba(34, 112, 58, 0.85) !important;
+  border-color: rgba(46, 204, 113, 0.95) !important;
+  color: #eafaf1 !important;
+  font-weight: 800;
+}
+.lobbyActions {
+  margin-top: 4px;
+}
+
+/* Under the card grid: stake / card summary + hints (mobile-first) */
+.lobbyControls {
+  margin-top: 14px;
+  padding: 14px 12px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(8, 12, 22, 0.55);
+}
+.lobbyStakeSummary {
+  margin: 0;
+  flex: 1 1 100%;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(46, 204, 113, 0.12);
+  border: 1px solid rgba(46, 204, 113, 0.35);
+  font-size: 14px;
+  font-weight: 700;
+  color: #c8f5d9;
+  line-height: 1.45;
+}
+.lobbyNonHostHint {
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.62);
+}
+body.theme-light .lobbyControls {
+  background: rgba(255, 255, 255, 0.78);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+body.theme-light .lobbyStakeSummary {
+  color: #1e5c32;
+  background: rgba(46, 204, 113, 0.15);
+  border-color: rgba(46, 204, 113, 0.4);
+}
+body.theme-light .lobbyNonHostHint {
+  color: rgba(0, 0, 0, 0.55);
+}
+.btn.primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.2);
+}
+
+/* Two-column play layout */
+.playShell { padding: 12px; }
+.mainShell {
+  padding: 10px 10px 12px;
+}
+.mainStats {
+  margin-bottom: 8px;
+  gap: 6px;
+}
+.mainShell .statBox {
+  background: #334155;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 10px;
+  padding: 5px 3px 5px;
+  box-shadow: none;
+}
+.mainShell .statLab {
+  font-size: 9px;
+  letter-spacing: 0;
+  text-transform: none;
+  opacity: 0.88;
+  margin-bottom: 3px;
+}
+.mainShell .statVal {
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 900;
+}
+.boardSizeLabel {
+  margin-top: 8px;
+}
+.masterBingoScroll {
+  margin-top: 8px;
+  max-height: min(58vh, 520px);
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.25) rgba(0,0,0,0.2);
+}
+.masterBingoScroll::-webkit-scrollbar {
+  width: 8px;
+}
+.masterBingoScroll::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 8px;
+}
+.liveCallCard--lobby {
+  opacity: 0.72;
+}
+.liveCallCard--lobby .currentCallBig {
+  opacity: 0.85;
+}
+.sideStarted.sideLive {
+  color: #f4d03f;
+  font-weight: 800;
+  font-size: 13px;
+}
+.playGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.playTopStrip {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: start;
+}
+.playTopStrip .sideStarted {
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  text-align: center;
+  width: 100%;
+  font-size: 15px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  opacity: 0.96;
+}
+.playTopStrip .liveCallCard {
+  min-width: 0;
+  width: 100%;
+}
+
+/* Shrink current-call box width to match Habesha compact pill. */
+#viewPlay .playTopStrip .liveCallCard {
+  width: 100%;
+  max-width: none;
+}
+.habeshaLiveCall--compact {
+  padding: 5px 7px 6px;
+  border-radius: 12px;
+  border-color: rgba(80, 128, 204, 0.45);
+  background: linear-gradient(180deg, rgba(27, 45, 76, 0.82) 0%, rgba(16, 30, 55, 0.9) 100%);
+}
+.habeshaCompactInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 5px;
+}
+.habeshaLiveCall--compact .habeshaCurrentCallPanel {
+  padding: 5px 8px 6px;
+  border-radius: 10px;
+  border-color: rgba(103, 170, 255, 0.55);
+  background: linear-gradient(180deg, rgba(33, 107, 236, 0.8) 0%, rgba(20, 78, 182, 0.86) 100%);
+}
+.habeshaLiveCall--compact .habeshaCallPillRow {
+  margin-top: 2px;
+}
+.habeshaLiveCall--compact .habeshaCallLabel,
+.habeshaLiveCall--compact .habeshaRecentLabel {
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  margin-bottom: 0;
+  color: rgba(235, 245, 255, 0.94);
+}
+.habeshaRecentWrap {
+  min-width: 0;
+}
+.habeshaLiveCall--compact .recentCalls {
+  margin-top: 3px;
+  gap: 4px;
+}
+.habeshaLiveCall--compact .recentChip {
+  padding: 4px 9px;
+  font-size: clamp(11px, 3.4vw, 14px);
+  font-weight: 800;
+  border-radius: 9px;
+  line-height: 1.1;
+}
+.habeshaLiveCall--compact .currentCallBig {
+  font-size: clamp(17px, 5vw, 24px);
+  font-weight: 900;
+  padding: 6px 18px;
+  border-radius: 999px;
+  box-shadow: 0 3px 10px rgba(255, 132, 40, 0.32);
+  line-height: 1.05;
+}
+/* Habesha layout: master board + your card side-by-side. */
+.playBoardCardRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 4px 8px;
+  margin-top: 3px;
+  align-items: start;
+}
+.playBoardCardRow > * {
+  min-width: 0;
+}
+.playCardColumn {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.playBoardCardRow .playBingoSection {
+  min-width: 0;
+}
+.playBoardCardRow .boardSizeLabel {
+  font-size: 11px;
+  margin-top: 0;
+  margin-bottom: 1px;
+}
+.playBoardCardRow .masterBingo {
+  margin-top: 0;
+}
+.playBoardCardRow .masterBingoScroll {
+  max-height: none;
+  overflow-y: visible;
+  padding-right: 0;
+}
+.playBoardCardRow .bingoCols {
+  gap: 2px;
+}
+.playBoardCardRow .bingoCol {
+  gap: 1px;
+}
+.playBoardCardRow .bingoColHead {
+  font-size: 11px;
+  padding: 1px 0;
+  border-radius: 5px;
+  font-weight: 900;
+}
+/* Narrower, taller call cells so both boards fit side-by-side on mobile */
+.playBoardCardRow .mCell {
+  padding: 1px 0;
+  font-size: clamp(11px, 3.5vw, 13px);
+  font-weight: 800;
+  border-radius: 5px;
+  min-height: 0;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.05;
+}
+.playCardColumn .myCardPanel {
+  margin-top: 0;
+  padding: 10px 8px 12px;
+}
+.playCardColumn .myCardPanel .label {
+  font-size: 12px;
+}
+.playCardColumn .myCardPanel .bingoGrid {
+  gap: 4px;
+}
+.playCardColumn .myCardPanel .bingoHeadTile {
+  padding: 5px 3px;
+  font-size: 12px;
+  border-radius: 7px;
+  font-weight: 900;
+}
+
+/* Remove the bottom helper sentence to match the Habesha reference layout. */
+#playStatusHint {
+  display: none !important;
+}
+.playCardColumn .myCardPanel .bingoGrid .cell {
+  padding: 3px 2px;
+  min-height: 0;
+  font-size: clamp(12px, 4.2vw, 16px);
+  border-radius: 50%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.05;
+}
+.playCardColumn .myCardPanel .bingoGrid .cell.free {
+  font-size: clamp(15px, 5vw, 19px);
+}
+.statsRow.tight {
+  margin-bottom: 10px;
+}
+.sideStarted {
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.85;
+  margin-bottom: 6px;
+}
+/* Spectator card next to master board row */
+.playCardColumn .spectatorHero {
+  margin: 0;
+  max-width: none;
+}
+.spectatorHero {
+  border-radius: 16px;
+  background: linear-gradient(180deg, #e8f4fc 0%, #dceef9 100%);
+  border: 2px solid #1a3a5c;
+  padding: 18px 14px;
+  box-shadow: 0 4px 18px rgba(26, 58, 92, 0.12);
+}
+.spectatorHeroInner {
+  max-width: 420px;
+  margin: 0 auto;
+  text-align: center;
+}
+.spectatorHeroIcon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background: #cfe8f5;
+  border: 2px solid #1a3a5c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1a3a5c;
+}
+.spectatorEye {
+  width: 34px;
+  height: 34px;
+}
+.spectatorFalseBingoX {
+  width: 44px;
+  height: 44px;
+  color: #c0392b;
+}
+.spectatorFalseBingoX.hidden {
+  display: none;
+}
+.spectatorHeroTitle {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f2d4a;
+  letter-spacing: -0.02em;
+}
+.spectatorHeroLead {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #154360;
+}
+.spectatorHeroHint {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #2874a6;
+}
+
+/* Winner modal (reference) */
+.winnerSheet {
+  max-width: 400px;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+  color: #1a1a1a;
+  border: 2px solid rgba(241,196,15,0.6);
+  box-shadow: 0 0 24px rgba(241, 196, 15, 0.25);
+}
+.winnerHead {
+  font-size: 22px;
+  font-weight: 900;
+  color: #566573;
+  margin-bottom: 10px;
+}
+.winnerHead.winnerGreen {
+  color: #1e8449;
+}
+.prizeBox {
+  text-align: center;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  background: rgba(39, 174, 96, 0.12);
+  border: 1px solid rgba(39, 174, 96, 0.35);
+}
+.prizeLab { font-size: 12px; color: #566573; }
+.prizeVal { font-size: 32px; font-weight: 900; color: #1e8449; }
+.wcPlayer { font-weight: 800; margin-bottom: 8px; font-size: 16px; }
+.wcMetaRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.wcPatternPopover {
+  display: inline-block;
+  padding: 6px 12px;
+  background: #fdeba7;
+  border: 1px solid #f4d03f;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #7d6608;
+  line-height: 1.3;
+  max-width: 100%;
+}
+.wcBoardPill {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+.wcSheet {
+  border: 2px solid #f4d03f;
+  border-radius: 14px;
+  padding: 10px;
+  margin-bottom: 12px;
+  background: #fffef5;
+}
+.wcLettersRow {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.wcL {
+  text-align: center;
+  font-weight: 900;
+  font-size: 12px;
+  padding: 4px 0;
+  border-radius: 6px;
+}
+.wcL.h0 { background: #f7dc6f; color: #7d6608; }
+.wcL.h1 { background: #82e0aa; color: #145a32; }
+.wcL.h2 { background: #85c1e9; color: #1b4f72; }
+.wcL.h3 { background: #f1948a; color: #78281f; }
+.wcL.h4 { background: #d7bde2; color: #4a235a; }
+.wcGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+}
+.wcCell {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 2px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #dfe4ea;
+  color: #566573;
+}
+.wcCell.wcCalled {
+  background: #27ae60;
+  color: #fff;
+  border-color: #1e8449;
+}
+.wcCell.wcWinLine {
+  background: linear-gradient(180deg, #d5f5f8 0%, #9ee5ed 100%);
+  border: 2px solid #1abc9c;
+  color: #0a3d32;
+  box-shadow: inset 0 0 0 1px rgba(26, 188, 156, 0.35);
+}
+.wcCell.wcFree {
+  background: #27ae60;
+  color: #fff;
+  font-size: 16px;
+}
+.wcCell.wcFree.wcWinLine {
+  background: linear-gradient(180deg, #a8e6cf 0%, #52c9a6 100%);
+  border-color: #1abc9c;
+  color: #fff;
+}
+.wcCell.wcWinNum {
+  border: 3px solid #e67e22 !important;
+  background: #fdebd0;
+  color: #1a1a1a;
+  box-shadow: 0 0 0 1px rgba(230, 126, 34, 0.5);
+}
+.wcCell.wcWinLine.wcWinNum {
+  background: #fdebd0;
+}
+.wcWinNumInner {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  line-height: 1.05;
+}
+.wcWinNumDigit {
+  font-weight: 800;
+}
+.wcBingoCallStar {
+  font-size: 14px;
+  line-height: 1;
+  color: #f39c12;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.18));
+}
+.wcWinBar {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #fdebd0;
+  border: 1px solid #f0b27a;
+  font-weight: 700;
+  font-size: 13px;
+}
+.wcWinBarStar {
+  color: #f39c12;
+  margin: 0 2px;
+}
+.modalFooter {
+  margin-top: 10px;
+  font-size: 11px;
+  opacity: 0.55;
+  text-align: center;
+  line-height: 1.4;
+  max-width: 100%;
+}
+/* Optional light theme (toggle) */
+body.theme-light {
+  background: #e8eef5;
+  color: #1a2744;
+}
+body.theme-light .card {
+  background: #fff;
+  border-color: rgba(26, 58, 92, 0.12);
+  color: #1a2744;
+}
+body.theme-light .lobbyStrip {
+  background: linear-gradient(180deg, #eef2f7 0%, #e2e8f0 100%);
+  border-color: rgba(26, 58, 92, 0.12);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+body.theme-light .lobbyBoardPanel {
+  background: #fff;
+  border-color: rgba(26, 58, 92, 0.12);
+  color: #1a2744;
+}
+body.theme-light .boardScroll .boardLobbySquircle .num,
+body.theme-light .boardScroll .num {
+  background: #dfe4ea;
+  border-color: rgba(26, 58, 92, 0.14);
+  color: #1a2744;
+}
+body.theme-light .boardScroll .num:not(.disabled):not(.taken):hover {
+  background: #d0d7df;
+}
+body.theme-light .title .subtitle,
+body.theme-light .wallet .label,
+body.theme-light .label {
+  color: #566573;
+  opacity: 1;
+}
+body.theme-light input[type="number"] {
+  background: #f4f6f9;
+  color: #1a2744;
+  border-color: rgba(26, 58, 92, 0.15);
+}
+body.theme-light .pickBox {
+  background: #f4f6f9;
+  border-color: rgba(26, 58, 92, 0.2);
+  color: #1a2744;
+}
+body.theme-light .themeToggle {
+  background: #fff;
+  border-color: rgba(26, 58, 92, 0.2);
+  color: #c87f0a;
+}
+body.theme-light .masterBingoScroll .mCell {
+  background: #eef2f7;
+  border-color: rgba(26, 58, 92, 0.12);
+  color: rgba(26, 58, 92, 0.75);
+}
+body.theme-light .mCell.lobbyTaken {
+  color: #c0392b !important;
+}
+body.theme-light .mCell.lobbyYourPick {
+  color: #145a32 !important;
+}
+
+/* Full-screen transition when pick window ends → playing board (reference flow) */
+.boardTransitionOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(7, 12, 24, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.boardTransitionInner {
+  text-align: center;
+  max-width: 320px;
+}
+.boardTransitionSpinner {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 20px;
+  border: 3px solid rgba(47, 125, 255, 0.25);
+  border-top-color: #2f7dff;
+  border-radius: 50%;
+  animation: boardTransitionSpin 0.7s linear infinite;
+}
+@keyframes boardTransitionSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.boardTransitionTitle {
+  font-size: 20px;
+  font-weight: 800;
+  color: #e8eefc;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+.boardTransitionSub {
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(232, 238, 252, 0.75);
+}
+body.theme-light .boardTransitionOverlay {
+  background: rgba(232, 238, 245, 0.94);
+}
+body.theme-light .boardTransitionTitle {
+  color: #1a2744;
+}
+body.theme-light .boardTransitionSub {
+  color: rgba(26, 39, 68, 0.72);
+}
+body.theme-light .boardTransitionSpinner {
+  border-color: rgba(47, 125, 255, 0.2);
+  border-top-color: #2f7dff;
+}
+
+@keyframes playingBoardEnterKf {
+  0% {
+    opacity: 0.4;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.mainShell.playingBoardEnter {
+  animation: playingBoardEnterKf 0.5s ease-out;
+}
+
+/* Two-page flow: selection vs playing (Habesha-style) */
+.viewSelectHabesha.card {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0 0 12px;
+  margin-bottom: 0;
+}
+.viewSelectTitleMinimal {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #f2f6ff;
+}
+body.theme-light .viewSelectTitleMinimal {
+  color: #1a2744;
+}
+.viewSelectIntro {
+  margin-bottom: 16px;
+}
+.viewSelectTitle {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.viewSelectSub {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  opacity: 0.88;
+}
+.viewSelectSub strong {
+  opacity: 1;
+  font-weight: 700;
+}
+.playPageHint {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+.selectPageHint {
+  margin-top: 14px;
+}
+/* Player card: Habesha-style — plain cells until tapped; marked = shaded dab */
+.myCardPanel {
+  margin-top: 14px;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(93, 173, 226, 0.22);
+  border-radius: 18px;
+  padding: 18px 14px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+.myCardPanel .label {
+  color: rgba(242, 246, 255, 0.95);
+  opacity: 1;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.myCardPanel .bingoGrid .cell {
+  color: rgba(248, 250, 252, 0.96);
+  font-weight: 800;
+  background: rgba(30, 41, 59, 0.45);
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+.myCardPanel .bingoGrid .cell.free {
+  background: linear-gradient(180deg, #2ecc71 0%, #1e8449 100%);
+  color: #fff;
+  font-size: 15px;
+}
+.myCardPanel .bingoGrid .cell.marked {
+  background: rgba(46, 204, 113, 0.72);
+  color: #062d1f;
+  border: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.myCardPanel .bingoGrid .cell.free.marked {
+  background: linear-gradient(180deg, #58d68d 0%, #239b56 100%);
+  color: #fff;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+/* Tappable numbers look the same as idle cells — only cursor hints interaction */
+.myCardPanel .bingoGrid .cell.canTap {
+  cursor: pointer;
+}
+.myCardPanel .bingoGrid .cell.canTap:active {
+  transform: scale(0.97);
+  opacity: 0.9;
+}
+.myCardPanel .buttons {
+  margin-top: 14px;
+}
+.myCardPanel .buttons .btn.primary {
+  width: 100%;
+  max-width: 100%;
+  margin-right: 0;
+  padding: 14px 20px;
+  font-size: 16px;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(255, 122, 0, 0.35);
+}
+body.theme-light .viewSelectSub {
+  color: #3d4f70;
+  opacity: 1;
+}
+
+/* Lobby pick feedback — info toast (fixed, matches light info banner on dark UI) */
+.appToast {
+  position: fixed;
+  left: 50%;
+  bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  z-index: 8500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: min(420px, calc(100vw - 24px));
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #2563eb;
+  background: #e0f2fe;
+  color: #1e3a8a;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+.appToast.hidden {
+  display: none;
+}
+.appToastIcon {
+  flex-shrink: 0;
+  display: flex;
+  color: #2563eb;
+}
+.appToastSvg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+.appToastMsg {
+  flex: 1;
+  min-width: 0;
+}
+.appToastClose {
+  flex-shrink: 0;
+  margin: -4px -6px -4px 0;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #2563eb;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 400;
+  cursor: pointer;
+}
+.appToastClose:hover {
+  background: rgba(37, 99, 235, 0.12);
+}
+body.theme-light .appToast {
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.15);
+}

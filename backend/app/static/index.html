@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="application-name" content="ETHIO BINGO" />
+  <meta name="apple-mobile-web-app-title" content="ETHIO BINGO" />
+  <title>ETHIO BINGO</title>
+  <link rel="stylesheet" href="/static/style.css?v=20260364" />
+</head>
+<body>
+  <div id="boardTransitionOverlay" class="boardTransitionOverlay hidden" aria-hidden="true">
+    <div class="boardTransitionInner">
+      <div class="boardTransitionSpinner" aria-hidden="true"></div>
+      <div class="boardTransitionTitle">Round starting</div>
+      <div class="boardTransitionSub">Opening the playing board…</div>
+    </div>
+  </div>
+  <div id="app" class="container">
+    <header class="header">
+      <div class="title">
+        <div class="subtitle" id="subtitle">Loading...</div>
+      </div>
+      <div class="headerActions">
+        <div class="wallet">
+          <div class="label">Balance</div>
+          <div class="value" id="balance">0 ETB</div>
+        </div>
+      </div>
+    </header>
+
+    <section class="lobbyStrip" id="lobbyStrip">
+      <div class="lobbyAvatar" id="userAvatar">?</div>
+      <button type="button" class="themeToggle themeToggleStrip" id="themeToggle" title="Toggle theme" aria-label="Toggle light and dark theme">☀</button>
+      <div class="lobbyPill lpCard"><span class="lpLab">CARD</span><span class="lpVal" id="topCard">--</span></div>
+      <div class="lobbyPill lpWallet"><span class="lpLab">WALLET</span><span class="lpVal" id="topWallet">0</span></div>
+      <div class="lobbyPillPair">
+        <div class="lobbyPill lpStake"><span class="lpLab">STAKE</span><span class="lpVal" id="topStake">10</span></div>
+        <div class="lobbyPill lpStart" id="lobbyStartPill" title="Time until round starts">
+          <span class="lpLab" id="topStartingLab">START</span><span class="lpVal" id="topStarting">—</span>
+        </div>
+      </div>
+    </section>
+
+    <div id="lobbyConnectHint" class="lobbyConnectHint hidden" role="alert">
+      <strong class="lobbyConnectHintTitle">No live countdown</strong>
+      <p class="lobbyConnectHintText" id="lobbyConnectHintText"></p>
+    </div>
+
+    <div id="lobbyCountdownBanner" class="lobbyCountdownBanner hidden" role="status" aria-live="polite">
+      <div class="lobbyCountdownBannerInner">
+        <span class="lobbyCountdownIcon" aria-hidden="true">⏰</span>
+        <div class="lobbyCountdownText">
+          <div class="lobbyCountdownMain" id="lobbyCountdownMain"></div>
+          <div class="lobbyCountdownSub" id="lobbyCountdownSub"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="balanceBanner" class="balanceBanner hidden" role="alert">
+      <strong class="balanceBannerTitle">Insufficient balance!</strong>
+      <span class="balanceBannerBody" id="balanceBannerText"></span>
+    </div>
+
+    <div id="lobbyPlayersBanner" class="lobbyPlayersBanner hidden" role="status" aria-live="polite"></div>
+
+    <!-- Page 1: card selection only (1–400). No master board, no calls. -->
+    <section class="card appPage viewSelectHabesha" id="viewSelect">
+      <div class="lobbyTicketSection hidden" id="lobbyTicketSection">
+        <div class="lobbyBoardPanel">
+          <div class="ticketLegend hidden" id="ticketLegendLobby">
+            <span><i class="lg yourpick"></i> Your pick</span>
+            <span><i class="lg taken"></i> Taken</span>
+          </div>
+          <div class="label pickBoardLabel hidden" id="pickBoardLabel">Pick your ticket number</div>
+          <div class="boardScroll lobbyGridScroll">
+            <div class="board boardCols10 boardLobbySquircle" id="board"></div>
+          </div>
+        </div>
+        <div class="lobbyCardPreview hidden" id="lobbyCardPreview" aria-live="polite">
+          <div class="lobbyCardPreviewLabel">Your card</div>
+          <div class="lobbyPreviewLetters" id="lobbyPreviewLetters"></div>
+          <div class="lobbyPreviewGrid" id="lobbyPreviewGrid"></div>
+          <p class="lobbyPreviewFoot" id="lobbyPreviewFoot">
+            Tap the same card number above to deselect (refund stake), or tap another free number to change.
+          </p>
+        </div>
+      </div>
+
+      <div class="lobbyControls hidden" id="lobbyControls">
+        <div class="row lobbyActions">
+          <p class="lobbyStakeSummary hidden" id="lobbyStakeSummary" aria-live="polite"></p>
+          <div class="field lobbyPickField">
+            <div class="label">Your card #</div>
+            <div class="pickBox" id="pickBox">None</div>
+          </div>
+        </div>
+        <p class="lobbyNonHostHint hidden" id="lobbyNonHostHint"></p>
+      </div>
+      <div class="hint selectPageHint" id="statusHint"></div>
+    </section>
+
+    <!-- Page 2: live round — Habesha-style stats + 1–75 board + calls + your card -->
+    <section class="card mainShell appPage hidden" id="viewPlay">
+      <div class="statsRow mainStats" id="statsRow"></div>
+      <div class="playGrid">
+        <div class="playBoardCardRow">
+          <div class="playBingoSection" id="playBingoSection">
+            <div class="label boardSizeLabel">Board size (1–75)</div>
+            <div class="masterBingoScroll">
+              <div class="masterBingo" id="masterBingo"></div>
+            </div>
+          </div>
+
+          <div class="playCardColumn">
+            <div class="playTopStrip">
+              <div class="sideStarted" id="sideStarted">—</div>
+              <div class="liveCallCard habeshaLiveCall habeshaLiveCall--compact" id="liveCallCard">
+                <div class="habeshaCompactInner">
+                  <div class="habeshaCurrentCallPanel">
+                    <div class="label habeshaCallLabel">Current call</div>
+                    <div class="habeshaCallPillRow">
+                      <span class="currentCallBig" id="currentCallBig">—</span>
+                    </div>
+                  </div>
+                  <div class="habeshaRecentWrap">
+                    <div class="label habeshaRecentLabel">Recent calls</div>
+                    <div class="recentCalls" id="recentCalls"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card myCardPanel hidden" id="myCardSection">
+              <div class="label">Your card — tap when called</div>
+              <div class="bingoHead" id="bingoHead"></div>
+              <div class="bingoGrid" id="myCard"></div>
+              <div class="row buttons" style="margin-top:12px">
+                <button type="button" id="claimBingoBtn" class="btn primary" disabled>BINGO!</button>
+              </div>
+            </div>
+
+            <div class="spectatorHero hidden" id="spectatorHero" role="status" aria-live="polite">
+              <div class="spectatorHeroInner">
+                <div class="spectatorHeroIcon" aria-hidden="true">
+                  <svg class="spectatorEye" id="spectatorEyeIcon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <circle cx="12" cy="12" r="2.25" fill="currentColor" />
+                  </svg>
+                  <svg
+                    id="disqualifiedFalseBingoXIcon"
+                    class="spectatorFalseBingoX hidden"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <circle cx="12" cy="12" r="10" fill="rgba(192,57,43,0.12)" />
+                    <path d="M8 8L16 16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
+                    <path d="M16 8L8 16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
+                  </svg>
+                </div>
+                <h2 class="spectatorHeroTitle">Spectator Mode</h2>
+                <p class="spectatorHeroLead" id="spectatorHeroLead">You are watching this game</p>
+                <p class="spectatorHeroHint" id="spectatorHeroHint">
+                  You did not pick a card before this round started, so you are watching only. When the round ends, join the next one from the lobby in time!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="hint playPageHint" id="playStatusHint" aria-live="polite"></p>
+
+    </section>
+
+    <div id="winnerModal" class="modal hidden" aria-hidden="true">
+      <div class="modalInner winnerSheet">
+        <div class="winnerHead" id="winnerHeadTitle">Winner</div>
+        <div class="prizeBox">
+          <div class="prizeLab">Prize Won</div>
+          <div class="prizeVal" id="winnerPrizeAmt">0 ETB</div>
+        </div>
+        <div class="winnerCardWrap" id="winnerCardWrap"></div>
+        <button type="button" class="btn primary" id="winnerCloseBtn">OK</button>
+        <div class="modalFooter" id="winnerFooterBot"></div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    id="appToast"
+    class="appToast hidden"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+    aria-hidden="true"
+  >
+    <span class="appToastIcon" aria-hidden="true">
+      <svg class="appToastSvg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"
+          stroke="currentColor"
+          stroke-width="1.5"
+        />
+        <path d="M12 16v-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        <circle cx="12" cy="8.5" r="1.1" fill="currentColor" />
+      </svg>
+    </span>
+    <span class="appToastMsg" id="appToastMsg"></span>
+    <button type="button" class="appToastClose" id="appToastClose" aria-label="Dismiss notification">
+      &times;
+    </button>
+  </div>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="/static/webapp.js?v=20260357"></script>
+</body>
+</html>
