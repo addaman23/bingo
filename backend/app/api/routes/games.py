@@ -43,6 +43,12 @@ def _utc_now() -> datetime:
     return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
+def _naive_utc(dt: datetime) -> datetime:
+    if dt.tzinfo is None:
+        return dt
+    return dt.astimezone(timezone.utc).replace(tzinfo=None)
+
+
 def _lock_game_row(db: Session, game_id: str) -> Game:
     """Serialize game state progression across concurrent clients."""
     return db.execute(select(Game).where(Game.id == game_id).with_for_update()).scalar_one()
@@ -192,7 +198,7 @@ def game_to_state(db: Session, game: Game, user: Any, bet: GameBet | None) -> di
 
     seconds_until_next_ball: int | None = None
     if game.status == GameStatus.running.value and game.last_advance_at:
-        elapsed = (now - game.last_advance_at).total_seconds()
+        elapsed = (_naive_utc(now) - _naive_utc(game.last_advance_at)).total_seconds()
         gap = float(running_next_call_interval_sec(game))
         rem = gap - elapsed
         seconds_until_next_ball = max(0, int(rem)) if rem > 0 else 0
