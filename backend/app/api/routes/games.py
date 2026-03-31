@@ -43,6 +43,11 @@ def _utc_now() -> datetime:
     return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
+def _lock_game_row(db: Session, game_id: str) -> Game:
+    """Serialize game state progression across concurrent clients."""
+    return db.execute(select(Game).where(Game.id == game_id).with_for_update()).scalar_one()
+
+
 class BetRequest(BaseModel):
     stake_etb: float
     pick_number: int
@@ -249,6 +254,8 @@ def get_active_game(db: Session = Depends(get_db), user=Depends(get_current_user
             min_stake_etb=settings.DEFAULT_MIN_STAKE_ETB,
         )
         db.flush()
+    else:
+        game = _lock_game_row(db, game.id)
 
     bet = get_bet_for_user(db, game, user)
     if game.status == GameStatus.lobby.value:
@@ -316,6 +323,7 @@ def get_game_state(game_id: str, db: Session = Depends(get_db), user=Depends(get
     game = db.get(Game, game_id)
     if not game:
         raise HTTPException(status_code=404, detail="Game not found")
+    game = _lock_game_row(db, game.id)
 
     bet = get_bet_for_user(db, game, user)
     now = _utc_now()
