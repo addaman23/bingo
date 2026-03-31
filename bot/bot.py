@@ -928,16 +928,39 @@ async def addbalance_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     raw_target = args[0].strip()
+    amount: float | None = None
+    amount_arg_idx = 1
     try:
         amount = float(args[1].replace(",", "."))
     except ValueError:
-        await update.message.reply_text("Amount must be a number (e.g. 100 or 50.5).")
-        return
+        # Support spaced phone format, e.g.:
+        # /addbalance +251 91 183 7353 100 note...
+        found = False
+        max_scan = min(len(args) - 1, 6)
+        for idx in range(2, max_scan + 1):
+            try:
+                amt_try = float(args[idx].replace(",", "."))
+            except ValueError:
+                continue
+            target_try = "".join(args[:idx]).strip()
+            if len(telebirr_phone_key_normalize(target_try)) >= 9 or looks_like_phone_query(target_try):
+                raw_target = target_try
+                amount = amt_try
+                amount_arg_idx = idx
+                found = True
+                break
+        if not found:
+            await update.message.reply_text(
+                "Amount must be a number (e.g. 100 or 50.5).\n"
+                "If phone contains spaces, use e.g. /addbalance +251911837353 100 or /addbalance +251 91 183 7353 100"
+            )
+            return
+    assert amount is not None
     if amount <= 0:
         await update.message.reply_text("Amount must be greater than zero.")
         return
 
-    note = " ".join(args[2:]).strip() if len(args) > 2 else None
+    note = " ".join(args[amount_arg_idx + 1 :]).strip() if len(args) > amount_arg_idx + 1 else None
     if not note:
         note = "admin manual credit"
 
