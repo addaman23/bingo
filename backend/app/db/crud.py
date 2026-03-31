@@ -478,7 +478,10 @@ def running_next_call_interval_sec(game: Game) -> int:
     called = load_json_list(game.called_numbers_json)
     if len(called) == 0:
         return max(0, int(settings.POST_LOBBY_FIRST_CALL_DELAY_SEC))
-    return max(1, int(game.call_interval_sec))
+    # Use the current default from settings for all running rounds so tweaks
+    # (e.g. DEFAULT_CALL_INTERVAL_SEC=2) take effect immediately, even for
+    # games created before the config change.
+    return max(1, int(settings.DEFAULT_CALL_INTERVAL_SEC))
 
 
 def maybe_auto_start_lobby(db: Session, game: Game, now: datetime) -> Game:
