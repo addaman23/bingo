@@ -75,12 +75,12 @@ def marks_to_set(marked: list) -> set[tuple[int, int]]:
 
 
 def has_complete_line(marks: set[tuple[int, int]]) -> bool:
-    """True if any row, column, or main diagonal is fully covered."""
+    """True if any supported bingo pattern is fully covered."""
     return winning_line_cells(marks) is not None
 
 
 def winning_line_cells(marks: set[tuple[int, int]]) -> tuple[str, set[tuple[int, int]]] | None:
-    """First completed bingo line: (human label, cells in that line). FREE counts as marked."""
+    """First completed bingo pattern: (human label, cells in that pattern). FREE counts as marked."""
     marks = set(marks)
     marks.add((2, 2))
 
@@ -99,4 +99,7 @@ def winning_line_cells(marks: set[tuple[int, int]]) -> tuple[str, set[tuple[int,
     diag_anti = {(i, 4 - i) for i in range(5)}
     if diag_anti <= marks:
         return ("Diagonal (Top-Right to Bottom-Left)", diag_anti)
+    corners = {(0, 0), (0, 4), (4, 0), (4, 4)}
+    if corners <= marks:
+        return ("Four Corners", corners)
     return None
