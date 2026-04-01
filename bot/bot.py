@@ -60,7 +60,7 @@ Abay
 
 ⚠️ Do not use ✏️ Edit on a pasted receipt — send the SMS again as a new message.
 
-የሚያጋጥማቹ የክፍያ ችግር ካለ @Addisu Abebaw በዚ ሳፖርት ማዉራት ይችላሉ"""
+የሚያጋጥማቹ የክፍያ ችግር ካለ @Ethiobingo23 በዚ ሳፖርት ማዉራት ይችላሉ"""
 
 
 def _get_db():
