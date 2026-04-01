@@ -48,10 +48,10 @@ log = logging.getLogger("ethio-bingo-bot")
 TELEBIRR_INSTRUCTIONS = """Telebirr አካውንት
 
 Account Number:
-0988013094
+0990960287
 
 Account Name:
-Addisu
+Abay
 
 መመሪያ
 1️⃣ ከላይ ባለው የ Telebirr አካውንት ገንዘቡን ያስገቡ
@@ -315,6 +315,13 @@ async def telebirr_paste_handler(update: Update, context: ContextTypes.DEFAULT_T
         return
 
     amount_etb, txn_id = parsed
+    max_dep = float(settings.MAX_TELEBIRR_DEPOSIT_ETB)
+    if float(amount_etb) > max_dep + 1e-9:
+        await msg.reply_text(
+            f"Maximum allowed deposit per transaction is {_fmt_etb(max_dep)} ETB.\n"
+            f"You sent {_fmt_etb(amount_etb)} ETB. Please send {_fmt_etb(max_dep)} ETB or less."
+        )
+        return
     tid, tun = await _ensure_user(update)
     db = _get_db()
     try:

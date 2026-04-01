@@ -55,6 +55,8 @@ class Settings(BaseSettings):
     DEFAULT_LOBBY_CARD_MAX: int = 400
     # Minimum amount users can request for /withdraw (won balance only).
     MIN_WITHDRAWAL_ETB: float = 50.0
+    # Max amount per single Telebirr receipt/deposit message.
+    MAX_TELEBIRR_DEPOSIT_ETB: float = 500.0
     # House commission on each round's total stakes (derash): winner receives (1 - fraction) × pool.
     OWNER_RAKE_FRACTION: float = 0.2
     # Telegram user ID that receives the rake (withdrawable). If empty, first ID in ADMIN_TELEGRAM_IDS is used.
