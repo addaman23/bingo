@@ -57,7 +57,7 @@ class Deposit(Base):
 
 
 class PendingTelebirrDeposit(Base):
-    """Legacy: queued Telebirr paste for manual approval (unused; pastes credit immediately)."""
+    """Queued Telebirr paste when amount exceeds MAX_TELEBIRR_AUTO_CREDIT_ETB (admin approve/reject)."""
 
     __tablename__ = "pending_telebirr_deposits"
 

@@ -362,15 +362,10 @@ def admin_complete_withdrawal(db: Session, request_id: str) -> WithdrawalRequest
 
 
 def list_withdrawal_requests(db: Session, status: str | None = None, limit: int = 40) -> list[WithdrawalRequest]:
+    q = select(WithdrawalRequest).join(User, WithdrawalRequest.user_id == User.id)
     if status:
-        q = (
-            select(WithdrawalRequest)
-            .where(WithdrawalRequest.status == status)
-            .order_by(WithdrawalRequest.created_at.desc())
-            .limit(limit)
-        )
-    else:
-        q = select(WithdrawalRequest).order_by(WithdrawalRequest.created_at.desc()).limit(limit)
+        q = q.where(WithdrawalRequest.status == status)
+    q = q.order_by(User.id.asc(), WithdrawalRequest.created_at.desc()).limit(limit)
     return list(db.execute(q).scalars().all())
 
 

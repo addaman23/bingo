@@ -21,6 +21,7 @@ from backend.app.db.crud import (
     admin_reject_withdrawal,
     admin_set_withdrawal_processing,
     approve_pending_telebirr_deposit,
+    create_pending_telebirr_deposit,
     create_withdrawal_request,
     deposit_amount,
     deposit_from_telebirr_paste,
@@ -126,6 +127,40 @@ async def _ensure_user(update: Update) -> tuple[int, str | None]:
     u = update.effective_user
     assert u is not None
     return int(u.id), u.username
+
+
+async def _notify_admins_pending_deposit(
+    context: ContextTypes.DEFAULT_TYPE,
+    *,
+    pending_id: int,
+    user_ref: str,
+    amount_etb: float,
+    telebirr_txn_id: str,
+    excerpt_preview: str,
+) -> None:
+    preview = (excerpt_preview or "").strip().replace("\n", " ")
+    if len(preview) > 400:
+        preview = preview[:397] + "…"
+    keyboard = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton("✅ Approve", callback_data=f"depapp_{pending_id}"),
+                InlineKeyboardButton("❌ Reject", callback_data=f"deprej_{pending_id}"),
+            ]
+        ]
+    )
+    text = (
+        "⏳ Telebirr deposit pending review\n\n"
+        f"👤 {user_ref}\n"
+        f"💰 {_fmt_etb(amount_etb)} ETB\n"
+        f"🔢 Txn: {telebirr_txn_id}\n\n"
+        f"Excerpt: {preview}"
+    )
+    for aid in settings.admin_ids():
+        try:
+            await context.bot.send_message(chat_id=aid, text=text, reply_markup=keyboard)
+        except Exception as ex:
+            log.warning("notify admin %s pending deposit: %s", aid, ex)
 
 
 async def post_init(application: Application) -> None:
@@ -315,40 +350,59 @@ async def telebirr_paste_handler(update: Update, context: ContextTypes.DEFAULT_T
         return
 
     amount_etb, txn_id = parsed
-    max_dep = float(settings.MAX_TELEBIRR_DEPOSIT_ETB)
-    if float(amount_etb) > max_dep + 1e-9:
-        await msg.reply_text(
-            f"Maximum allowed deposit per transaction is {_fmt_etb(max_dep)} ETB.\n"
-            f"You sent {_fmt_etb(amount_etb)} ETB. Please send {_fmt_etb(max_dep)} ETB or less."
-        )
-        return
+    auto_max = float(settings.MAX_TELEBIRR_AUTO_CREDIT_ETB)
+    amt = float(amount_etb)
     tid, tun = await _ensure_user(update)
     db = _get_db()
     try:
         init_db()
-        user = deposit_from_telebirr_paste(
-            db,
-            telegram_user_id=tid,
-            telegram_username=tun,
-            amount_etb=amount_etb,
-            telebirr_txn_id=txn_id,
-            raw_excerpt=text,
-        )
-        db.commit()
-        bal = float(user.balance_etb)
-        amt_txt = f"{int(amount_etb)}" if float(amount_etb).is_integer() else f"{float(amount_etb):.2f}"
-        bal_txt = f"{int(bal)}" if bal == int(bal) else f"{bal:.2f}"
-        await msg.reply_text(
-            "✅ Deposit Verified!\n\n"
-            f"💰 Amount: {amt_txt} ETB\n"
-            f"💳 Your new balance: {bal_txt} ETB\n\n"
-            "Thank you for your deposit! You can start playing now."
-        )
+        if amt <= auto_max + 1e-9:
+            user = deposit_from_telebirr_paste(
+                db,
+                telegram_user_id=tid,
+                telegram_username=tun,
+                amount_etb=amount_etb,
+                telebirr_txn_id=txn_id,
+                raw_excerpt=text,
+            )
+            db.commit()
+            bal = float(user.balance_etb)
+            amt_txt = f"{int(amount_etb)}" if float(amount_etb).is_integer() else f"{float(amount_etb):.2f}"
+            bal_txt = f"{int(bal)}" if bal == int(bal) else f"{bal:.2f}"
+            await msg.reply_text(
+                "✅ Deposit Verified!\n\n"
+                f"💰 Amount: {amt_txt} ETB\n"
+                f"💳 Your new balance: {bal_txt} ETB\n\n"
+                "Thank you for your deposit! You can start playing now."
+            )
+        else:
+            p, user = create_pending_telebirr_deposit(
+                db,
+                telegram_user_id=tid,
+                telegram_username=tun,
+                amount_etb=amount_etb,
+                telebirr_txn_id=txn_id,
+                raw_excerpt=text,
+            )
+            db.commit()
+            await msg.reply_text(
+                f"Your deposit of {_fmt_etb(amount_etb)} ETB is above {_fmt_etb(auto_max)} ETB and needs admin approval.\n\n"
+                "You will get a message here when it is approved or rejected. "
+                "If you already paid, keep your Telebirr SMS as proof."
+            )
+            await _notify_admins_pending_deposit(
+                context,
+                pending_id=p.id,
+                user_ref=_fmt_user_ref(tid, user.telegram_username),
+                amount_etb=float(amount_etb),
+                telebirr_txn_id=txn_id.strip().upper(),
+                excerpt_preview=text,
+            )
     except DuplicateTelebirrTxnError:
         db.rollback()
         await msg.reply_text(
             "This Telebirr transaction was already used to credit a balance.\n\n"
-            "If you sent a new payment, paste the new receipt. If you think this is wrong, contact support: @Addisu Abebaw"
+            "If you sent a new payment, paste the new receipt. If you think this is wrong, contact support: @Ethiobingo23"
         )
     except ValueError as e:
         db.rollback()
@@ -601,10 +655,20 @@ async def withdraw_pending_cmd(update: Update, context: ContextTypes.DEFAULT_TYP
         if not rows:
             await update.message.reply_text("No pending withdrawals.")
             return
-        blocks = []
+        blocks: list[str] = []
+        prev_group_key: int | None = None
         for wr in rows[:25]:
             u = db.get(User, wr.user_id)
             tid = u.telegram_user_id if u else "?"
+            group_key = u.id if u is not None else wr.user_id
+            if group_key != prev_group_key:
+                if blocks:
+                    blocks.append("")
+                if u is not None:
+                    blocks.append(f"— {_fmt_user_ref(int(u.telegram_user_id), u.telegram_username)} —")
+                else:
+                    blocks.append(f"— user_id:{wr.user_id} (missing user row) —")
+                prev_group_key = group_key
             short = withdrawal_request_short_id(wr)
             acct = (wr.account_number or "").strip()
             name = (wr.account_name or "").strip()
@@ -615,7 +679,7 @@ async def withdraw_pending_cmd(update: Update, context: ContextTypes.DEFAULT_TYP
                 f"👤 {name}\n"
                 f"🆔 Telegram user id: {tid}"
             )
-        await update.message.reply_text("Pending withdrawals:\n\n" + "\n\n".join(blocks))
+        await update.message.reply_text("Pending withdrawals (by player):\n\n" + "\n\n".join(blocks))
     finally:
         db.close()
 
