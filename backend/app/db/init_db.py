@@ -1,6 +1,6 @@
 from sqlalchemy import inspect, text
 
-from backend.app.db.crud import backfill_user_telebirr_phone_keys
+from backend.app.db.crud import backfill_telebirr_phone_keys_from_deposit_notes, backfill_user_telebirr_phone_keys
 from backend.app.db.models import Base
 from backend.app.db.session import SessionLocal, engine
 
@@ -80,6 +80,7 @@ def init_db() -> None:
     db = SessionLocal()
     try:
         backfill_user_telebirr_phone_keys(db)
+        backfill_telebirr_phone_keys_from_deposit_notes(db)
         db.commit()
     except Exception:
         db.rollback()

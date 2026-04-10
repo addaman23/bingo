@@ -25,7 +25,7 @@ from backend.app.db.crud import (
     create_withdrawal_request,
     deposit_amount,
     deposit_from_telebirr_paste,
-    find_users_by_telebirr_phone_key,
+    find_users_by_telebirr_phone_lookup,
     find_withdrawal_by_short_id,
     get_or_create_user,
     get_user_by_telegram_username,
@@ -992,7 +992,7 @@ async def addbalance_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "• /addbalance @username <amount_etb> [note]\n"
             "• /addbalance <phone> <amount_etb> [note] — e.g. 0988013094, +251988013094, phone:0988013094\n"
             "Same as /admin_deposit.\n\n"
-            "Phone matching uses the Telebirr number from their last /withdraw request (stored on file).\n"
+            "Phone matching uses their Telebirr mobile from a past /withdraw, or from a Telebirr deposit SMS we stored.\n"
             "Pure digits that look like a phone are matched by phone first; if nobody is linked, the same digits are tried as a Telegram user id.\n"
             "@username only works if they already used /start or /register once."
         )
@@ -1049,7 +1049,7 @@ async def addbalance_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     "Could not read that phone. Try e.g. phone:0988013094 or +251988013094"
                 )
                 return
-            matches = find_users_by_telebirr_phone_key(db, pkey)
+            matches = find_users_by_telebirr_phone_lookup(db, pkey)
             if len(matches) == 1:
                 target_id = int(matches[0].telegram_user_id)
                 tun = matches[0].telegram_username
@@ -1062,14 +1062,14 @@ async def addbalance_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
             else:
                 await update.message.reply_text(
                     "No player is linked to that phone yet.\n"
-                    "They need to request /withdraw once using that Telebirr account (so we store the number), "
-                    "or you credit by Telegram user id."
+                    "They need to /withdraw once with that Telebirr number, or paste a Telebirr deposit SMS in the bot "
+                    "(so we can store the number), or you credit by Telegram user id."
                 )
                 return
         elif looks_like_phone_query(raw_target):
             pkey = telebirr_phone_key_normalize(raw_target)
             if len(pkey) >= 9:
-                matches = find_users_by_telebirr_phone_key(db, pkey)
+                matches = find_users_by_telebirr_phone_lookup(db, pkey)
                 if len(matches) == 1:
                     target_id = int(matches[0].telegram_user_id)
                     tun = matches[0].telegram_username
@@ -1084,7 +1084,8 @@ async def addbalance_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     tun = None
                 else:
                     await update.message.reply_text(
-                        "No player linked to this phone. Use Telegram user id, or ask them to /withdraw once with this number."
+                        "No player linked to this phone. Use Telegram user id, or ask them to /withdraw or paste a "
+                        "Telebirr deposit SMS once with this number."
                     )
                     return
         if target_id is None and raw_target.isdigit():

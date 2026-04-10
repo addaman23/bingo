@@ -1,4 +1,5 @@
 import json
+import re
 import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any
@@ -58,6 +59,68 @@ def find_users_by_telebirr_phone_key(db: Session, key: str) -> list[User]:
     return list(db.execute(select(User).where(User.telebirr_phone_key == key)).scalars().all())
 
 
+def find_users_by_telebirr_phone_lookup(db: Session, key: str) -> list[User]:
+    """
+    Match users by ``telebirr_phone_key``, or by any past withdrawal ``account_number``
+    that normalizes to the same key (covers users whose key was never backfilled).
+    """
+    if len(key) < 9:
+        return []
+    direct = find_users_by_telebirr_phone_key(db, key)
+    if direct:
+        return direct
+    wrs = db.execute(
+        select(WithdrawalRequest).order_by(WithdrawalRequest.created_at.desc()).limit(8000)
+    ).scalars().all()
+    seen_ids: set[int] = set()
+    out: list[User] = []
+    for wr in wrs:
+        if telebirr_phone_key_normalize(wr.account_number or "") != key:
+            continue
+        u = db.get(User, wr.user_id)
+        if u and u.id not in seen_ids:
+            seen_ids.add(u.id)
+            out.append(u)
+    return out
+
+
+# Ethiopian mobile-like segments in Telebirr SMS / receipts (avoid greedy digit runs from amounts).
+_TELEBIRR_TEXT_PHONE_RES = tuple(
+    re.compile(p, re.IGNORECASE)
+    for p in (
+        r"(?:\+?251|0)(9\d{8})(?!\d)",
+        r"(?:\+?251|0)(7\d{8})(?!\d)",
+        r"(?<![\d])(9\d{8})(?!\d)",
+        r"(?<![\d])(7\d{8})(?!\d)",
+    )
+)
+
+
+def extract_telebirr_phone_keys_from_text(text: str | None) -> list[str]:
+    """Normalized mobile keys found in pasted Telebirr / bank SMS text."""
+    if not text:
+        return []
+    seen: set[str] = set()
+    out: list[str] = []
+    for rx in _TELEBIRR_TEXT_PHONE_RES:
+        for m in rx.finditer(text):
+            k = telebirr_phone_key_normalize(m.group(0))
+            if len(k) >= 9 and k not in seen:
+                seen.add(k)
+                out.append(k)
+    return out
+
+
+def attach_telebirr_phone_key_from_receipt(user: User, text: str | None) -> None:
+    """If the user has no phone key yet, try to learn it from receipt / SMS body."""
+    if user.telebirr_phone_key or not text:
+        return
+    for k in extract_telebirr_phone_keys_from_text(text):
+        if len(k) >= 9:
+            user.telebirr_phone_key = k
+            return
+
+
 def backfill_user_telebirr_phone_keys(db: Session) -> None:
     """Set telebirr_phone_key from the latest withdrawal row per user when still empty."""
     wrs = db.execute(select(WithdrawalRequest).order_by(WithdrawalRequest.created_at.desc())).scalars().all()
@@ -68,6 +131,23 @@ def backfill_user_telebirr_phone_keys(db: Session) -> None:
         k = telebirr_phone_key_normalize(wr.account_number)
         if len(k) >= 9:
             u.telebirr_phone_key = k
+
+
+def backfill_telebirr_phone_keys_from_deposit_notes(db: Session, *, limit: int = 4000) -> None:
+    """Set telebirr_phone_key from Telebirr deposit note text when still empty (SMS excerpt)."""
+    q = (
+        select(Deposit)
+        .join(User, Deposit.user_id == User.id)
+        .where(User.telebirr_phone_key.is_(None))
+        .where(Deposit.note.is_not(None))
+        .order_by(Deposit.created_at.desc())
+        .limit(limit)
+    )
+    for dep in db.execute(q).scalars().all():
+        u = db.get(User, dep.user_id)
+        if not u or u.telebirr_phone_key:
+            continue
+        attach_telebirr_phone_key_from_receipt(u, dep.note)
 
 
 def _sync_wallet_total(user: User) -> None:
@@ -180,6 +260,7 @@ def create_pending_telebirr_deposit(
         raise ValueError("This transaction number is already waiting for admin review.")
     user = get_or_create_user(db, telegram_user_id=telegram_user_id, telegram_username=telegram_username)
     excerpt = (raw_excerpt or "").strip().replace("\n", " ")[:2000]
+    attach_telebirr_phone_key_from_receipt(user, excerpt)
     p = PendingTelebirrDeposit(
         user_id=user.id,
         amount_etb=float(amount_etb),
@@ -257,6 +338,7 @@ def deposit_from_telebirr_paste(
         telebirr_txn_id=tid,
     )
     db.add(dep)
+    attach_telebirr_phone_key_from_receipt(user, note)
     db.flush()
     return user
 

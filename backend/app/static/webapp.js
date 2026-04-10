@@ -529,8 +529,8 @@ function populateLiveCall(game) {
     currentCallBig.textContent = "—";
   }
   recentCallsEl.innerHTML = "";
-  // Habesha style: show only 3 recent calls to save space.
-  const recent = (game.recent_calls || []).slice(0, 3);
+  const maxRecentCalls = 3;
+  const recent = (game.recent_calls || []).slice(0, maxRecentCalls);
   recent.forEach((n) => {
     const chip = document.createElement("span");
     const L = bingoLetter(n);

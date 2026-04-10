@@ -194,7 +194,8 @@ def game_to_state(db: Session, game: Game, user: Any, bet: GameBet | None) -> di
     rake_frac = max(0.0, min(1.0, float(settings.OWNER_RAKE_FRACTION)))
     net_prize_pool_etb = round(prize_pool_etb * (1.0 - rake_frac), 2)
 
-    recent_calls = list(reversed(called[-5:])) if called else []
+    # Newest-first, max 3 — matches WebApp "recent" chips (no extra payload).
+    recent_calls = list(reversed(called[-3:])) if called else []
 
     seconds_until_next_ball: int | None = None
     if game.status == GameStatus.running.value and game.last_advance_at:
